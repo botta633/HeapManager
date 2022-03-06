@@ -36,7 +36,7 @@ static void *mm_get_pages_from_OS(int units)
 
 void mm_instantiate_new_page_family(char *struct_name, uint32_t struct_size)
 {
-    vm_page_for_families_t *vm_page_family_curr = NULL;
+    vm_page_family_t *vm_page_family_curr = NULL;
     vm_page_for_families_t *new_vm_page_for_families = NULL;
 
     if(struct_size > SYSTEM_PAGE_SIZE)
@@ -48,7 +48,7 @@ void mm_instantiate_new_page_family(char *struct_name, uint32_t struct_size)
     if(!first_vm_page_for_families)
     {
 	first_vm_page_for_families = 
-	    (vm_page_for_families_t)* mm_get_pages_from_OS(1);
+	    (vm_page_for_families_t *) mm_get_pages_from_OS(1);
 
 	first_vm_page_for_families->next = NULL;
 	strncpy(first_vm_page_for_families->vm_page_family[0].struct_name, struct_name, MM_MAX_STRUCT_NAME);
@@ -56,9 +56,9 @@ void mm_instantiate_new_page_family(char *struct_name, uint32_t struct_size)
 	return;
     }
 
-    uint32_t count = 0
+    uint32_t count = 0;
 
-    ITERATE_PAGE_FAMILIES_BEGIN(first_vm_page_for_families, vm_page_family_curr){
+    ITERAGE_PAGE_FAMILIES_BEGIN(first_vm_page_for_families, vm_page_family_curr){
 	if(strncmp(vm_page_family_curr->struct_name, struct_name, MM_MAX_STRUCT_NAME) != 0){
 	    count++;
 	    continue;
@@ -71,7 +71,7 @@ void mm_instantiate_new_page_family(char *struct_name, uint32_t struct_size)
     // if the current page is full we request a new one and make it the current one and point next to the previous one
     if( count == MAX_FAMILIES_PER_PAGE )
     {
-	new_vm_page_for_families = (vm_page_for_families_t)*mm_get_pages_from_OS(1);
+	new_vm_page_for_families = (vm_page_for_families_t *)mm_get_pages_from_OS(1);
 	new_vm_page_for_families->next = first_vm_page_for_families;
 	first_vm_page_for_families = new_vm_page_for_families;
 	vm_page_family_curr = &first_vm_page_for_families->vm_page_family[0];

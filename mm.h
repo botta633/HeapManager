@@ -1,6 +1,8 @@
-#ifndef mm
-#define mm
+#ifndef MM_H
+#define MM_H
 #include <stdint.h>
+#include <assert.h>
+
 
 #define MM_MAX_STRUCT_NAME 32
 
@@ -26,7 +28,7 @@ typedef struct vm_page_for_families
     uint32_t count = 0; 					    \
     for(curr = (vm_page_family_t *) & vm_page_for_families_ptr -> vm_page_family[0]; \
 	    curr -> struct_size && count < MAX_FAMILIES_PER_PAGE; \
-	    cur++, count++) {
+	    curr++, count++) {
 
 
 
